@@ -1,0 +1,49 @@
+# Risk scoring weights for Sentinel AI
+# These weights determine how each factor contributes to the overall risk score
+# Weights should sum to 1.0 (system will normalize if they don't)
+
+risk_weights:
+  model_confidence: 0.35      # Confidence of the ML model prediction
+  anomaly_score: 0.20        # Isolation Forest anomaly score (normalized 0-100)
+  attack_severity: 0.15      # Inherent severity of the attack type
+  asset_criticality: 0.10   # Criticality of the affected asset
+  user_privilege_risk: 0.10  # Risk level of the user's privileges
+  alert_frequency: 0.05      # Frequency of similar alerts
+  threat_intel_reputation: 0.05  # Reputation from threat intelligence feeds
+
+# Attack severity mappings (can be customized by analysts)
+attack_severity:
+  Normal: 0.1
+  Fuzzers: 0.5
+  Analysis: 0.5
+  Backdoors: 0.9
+  DoS: 0.6
+  Exploits: 0.9
+  Generic: 0.4
+  Reconnaissance: 0.3
+  Shellcode: 0.9
+  Worms: 0.9
+
+# Asset criticality levels
+asset_criticality:
+  critical: 1.0
+  high: 0.8
+  medium: 0.5
+  low: 0.2
+  unknown: 0.3
+
+# User privilege risk levels
+user_privilege_risk:
+  admin: 1.0
+  privileged: 0.8
+  standard: 0.4
+  guest: 0.2
+  service: 0.6
+  unknown: 0.3
+
+# Severity tier thresholds
+severity_thresholds:
+  critical: 85
+  high: 70
+  medium: 40
+  low: 0

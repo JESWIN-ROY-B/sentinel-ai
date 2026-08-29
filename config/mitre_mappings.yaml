@@ -1,0 +1,162 @@
+# MITRE ATT&CK heuristic mappings for Sentinel AI
+# These are heuristic mappings for investigation purposes only
+# MUST be validated by security analysts - not definitive technique identification
+
+disclaimer: "MITRE ATT&CK mapping is a heuristic investigation aid and must be validated by a security analyst."
+
+attack_category_mappings:
+  Reconnaissance:
+    tactics:
+      - Reconnaissance
+    techniques:
+      - "Network Service Scanning"
+      - "Active Scanning"
+    confidence: low
+    notes: "Heuristic mapping based on scanning-like network patterns"
+
+  Analysis:
+    tactics:
+      - Reconnaissance
+    techniques:
+      - "Gather Victim Host Information"
+    confidence: low
+    notes: "Heuristic mapping for analysis-like traffic patterns"
+
+  Fuzzers:
+    tactics:
+      - Reconnaissance
+      - Initial Access
+    techniques:
+      - "Fuzzing"
+      - "Exploitation for Client Execution"
+    confidence: low
+    notes: "Heuristic mapping for fuzzing-like vulnerability probing"
+
+  Backdoors:
+    tactics:
+      - Persistence
+      - Command and Control
+    techniques:
+      - "Remote Access Software"
+      - "Remote File Copy"
+      - "Command and Control"
+    confidence: medium
+    notes: "Heuristic mapping for backdoor-like communication patterns"
+
+  DoS:
+    tactics:
+      - Impact
+    techniques:
+      - "Denial of Service"
+      - "Network Denial of Service"
+    confidence: medium
+    notes: "Heuristic mapping for denial-of-service traffic patterns"
+
+  Exploits:
+    tactics:
+      - Initial Access
+      - Execution
+      - Privilege Escalation
+    techniques:
+      - "Exploitation for Privilege Escalation"
+      - "Exploitation for Client Execution"
+      - "Exploitation of Remote Services"
+    confidence: medium
+    notes: "Heuristic mapping for exploit-like traffic patterns"
+
+  Generic:
+    tactics:
+      - Unknown
+    techniques:
+      - "Uncharacteristic Network Traffic"
+    confidence: very_low
+    notes: "Generic category - no specific ATT&CK mapping"
+
+  Shellcode:
+    tactics:
+      - Execution
+      - Defense Evasion
+    techniques:
+      - "Command and Scripting Interpreter"
+      - "Deobfuscate/Decode Files or Information"
+    confidence: medium
+    notes: "Heuristic mapping for shellcode-like execution patterns"
+
+  Worms:
+    tactics:
+      - Lateral Movement
+      - Propagation
+    techniques:
+      - "Remote Services"
+      - "Internal Spearphishing"
+      - "Replication Through Removable Media"
+    confidence: medium
+    notes: "Heuristic mapping for worm-like propagation patterns"
+
+  Normal:
+    tactics:
+      - None
+    techniques:
+      - "Normal Network Traffic"
+    confidence: high
+    notes: "Legitimate traffic - no ATT&CK tactics applicable"
+
+# MITRE ATT&CK tactic stage mappings for attack timelines
+attack_stage_mappings:
+  reconnaissance:
+    related_categories:
+      - Reconnaissance
+      - Analysis
+      - Fuzzers
+    default_tactic: "Reconnaissance"
+
+  initial_access:
+    related_categories:
+      - Exploits
+      - Fuzzers
+    default_tactic: "Initial Access"
+
+  execution:
+    related_categories:
+      - Exploits
+      - Shellcode
+    default_tactic: "Execution"
+
+  credential_access:
+    related_categories:
+      - Exploits
+      - Backdoors
+    default_tactic: "Credential Access"
+
+  lateral_movement:
+    related_categories:
+      - Worms
+      - Exploits
+      - Backdoors
+    default_tactic: "Lateral Movement"
+
+  privilege_escalation:
+    related_categories:
+      - Exploits
+      - Shellcode
+      - Backdoors
+    default_tactic: "Privilege Escalation"
+
+  command_and_control:
+    related_categories:
+      - Backdoors
+      - Shellcode
+    default_tactic: "Command and Control"
+
+  exfiltration:
+    related_categories:
+      - Exploits
+      - Backdoors
+    default_tactic: "Exfiltration"
+
+  impact:
+    related_categories:
+      - DoS
+      - Worms
+      - Exploits
+    default_tactic: "Impact"

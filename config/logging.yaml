@@ -1,0 +1,77 @@
+# Logging configuration for Sentinel AI
+
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  
+  detailed:
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+  
+  security:
+    format: "%(asctime)s - [SECURITY] - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/sentinel_ai.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+  
+  security_file:
+    class: logging.handlers.RotatingFileHandler
+    level: WARNING
+    formatter: security
+    filename: logs/security.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+
+loggers:
+  sentinel_ai:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+  
+  sentinel_ai.data:
+    level: DEBUG
+    handlers: [file]
+    propagate: false
+  
+  sentinel_ai.models:
+    level: DEBUG
+    handlers: [file]
+    propagate: false
+  
+  sentinel_ai.intelligence:
+    level: DEBUG
+    handlers: [file]
+    propagate: false
+  
+  sentinel_ai.ui:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+  
+  sentinel_ai.security:
+    level: WARNING
+    handlers: [security_file, console]
+    propagate: false
+
+root:
+  level: WARNING
+  handlers: [console]

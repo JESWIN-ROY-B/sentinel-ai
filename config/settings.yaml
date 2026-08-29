@@ -1,0 +1,138 @@
+# Sentinel AI Configuration Settings
+
+# Application settings
+app:
+  name: "Sentinel AI"
+  version: "1.0.0"
+  debug: false
+  log_level: "INFO"
+
+# Data settings
+data:
+  # Path configurations (relative to project root)
+  raw_data_dir: "data/raw"
+  processed_data_dir: "data/processed"
+  sample_data_dir: "data/sample"
+  
+  # Dataset settings
+  default_dataset: "UNSW-NB15"
+  supported_datasets:
+    - "UNSW-NB15"
+    - "synthetic"
+  
+  # Preprocessing settings
+  random_seed: 42
+  test_size: 0.2
+  validation_size: 0.1
+  handle_missing: "mean"  # Options: mean, median, most_frequent, drop
+  handle_infinite: "replace"  # Options: replace, drop
+  encoding_method: "label"  # Options: label, onehot
+  scaling_method: "standard"  # Options: standard, minmax, robust, none
+
+# Model settings
+models:
+  # Binary classifier settings
+  binary:
+    model_type: "auto"  # Options: auto, lightgbm, xgboost, histgradientboosting
+    class_weight: "balanced"
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+  
+  # Multi-class classifier settings
+  multiclass:
+    model_type: "auto"
+    class_weight: "balanced"
+    n_estimators: 100
+    max_depth: 6
+    learning_rate: 0.1
+  
+  # Anomaly detector settings
+  anomaly:
+    model_type: "isolation_forest"
+    contamination: 0.1
+    n_estimators: 100
+    max_samples: "auto"
+    random_state: 42
+  
+  # Model persistence
+  model_dir: "models"
+  save_format: "joblib"  # Options: joblib, pickle
+
+# Explainability settings
+explainability:
+  method: "shap"  # Options: shap, feature_importance, fallback
+  max_features: 20
+  fallback_on_error: true
+  use_cache: true
+
+# Correlation settings
+correlation:
+  time_window_minutes: 30
+  similarity_threshold: 0.7
+  group_by_fields:
+    - "source_ip"
+    - "destination_ip"
+    - "protocol"
+    - "service"
+    - "attack_category"
+  max_incident_alerts: 100
+
+# Threshold settings
+thresholds:
+  prediction_threshold: 0.5
+  anomaly_threshold: 50  # 0-100 scale
+  risk_critical: 85
+  risk_high: 70
+  risk_medium: 40
+
+# UI settings
+ui:
+  theme: "dark"
+  page_title: "Sentinel AI - SOC Assistant"
+  layout: "wide"
+  max_alerts_display: 1000
+  refresh_interval: 30  # seconds
+  enable_streaming_mode: true
+  streaming_speed: 1.0  # alerts per second in simulation
+
+# LLM settings (optional)
+llm:
+  enabled: false
+  provider: "template"  # Options: template, openai, anthropic, custom
+  api_key_env: "LLM_API_KEY"
+  model: "gpt-3.5-turbo"
+  max_tokens: 500
+  temperature: 0.3
+
+# Threat intelligence settings (optional)
+threat_intel:
+  enabled: false
+  provider: "mock"  # Options: mock, virustotal, alienVault, custom
+  api_key_env: "THREAT_INTEL_API_KEY"
+  cache_duration_hours: 24
+
+# Demo settings
+demo:
+  synthetic_data_enabled: true
+  num_synthetic_alerts: 500
+  num_synthetic_assets: 50
+  num_synthetic_users: 30
+  include_attack_chains: true
+  mask_ips_in_demo: true
+
+# Security settings
+security:
+  validate_uploads: true
+  max_file_size_mb: 100
+  allowed_extensions:
+    - ".csv"
+  sanitize_outputs: true
+  log_security_events: true
+
+# Performance settings
+performance:
+  enable_caching: true
+  cache_ttl: 3600  # seconds
+  batch_size: 1000
+  max_workers: 4

@@ -1,0 +1,11 @@
+user_id,username,full_name,email,privilege_level,department,last_login,account_status
+USR-0001,user1,User 1,user1@company.com,standard,Finance,2025-08-29 09:30:00,active
+USR-0002,user2,User 2,user2@company.com,standard,HR,2025-08-28 14:15:00,active
+USR-0003,user3,User 3,user3@company.com,privileged,Engineering,2025-08-29 08:45:00,active
+USR-0004,admin,Admin User,admin@company.com,admin,IT,2025-08-29 10:00:00,active
+USR-0005,service,Service Account,service@company.com,service,IT,2025-08-28 12:00:00,active
+USR-0006,guest,Guest User,guest@company.com,guest,General,2025-08-26 16:30:00,active
+USR-0007,user4,User 4,user4@company.com,standard,Sales,2025-08-27 11:00:00,active
+USR-0008,user5,User 5,user5@company.com,standard,Marketing,2025-08-29 07:15:00,active
+USR-0009,user6,User 6,user6@company.com,privileged,IT,2025-08-28 15:45:00,active
+USR-0010,user7,User 7,user7@company.com,standard,Finance,2025-08-26 10:30:00,suspended

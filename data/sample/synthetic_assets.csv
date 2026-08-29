@@ -1,0 +1,11 @@
+asset_id,asset_name,asset_type,ip_address,criticality,owner,department,os,last_updated
+AST-0001,Server-1,Server,192.168.1.100,critical,admin,IT,Linux,2025-08-28 15:30:00
+AST-0002,Server-2,Server,192.168.1.101,high,user3,Engineering,Windows,2025-08-27 10:15:00
+AST-0003,Server-3,Server,192.168.1.102,medium,user1,Finance,Linux,2025-08-29 08:45:00
+AST-0004,Server-4,Server,192.168.1.103,low,user2,HR,Windows,2025-08-26 14:20:00
+AST-0005,Workstation-1,Workstation,10.0.0.100,critical,admin,IT,Windows,2025-08-28 16:00:00
+AST-0006,Workstation-2,Workstation,10.0.0.101,high,user3,Engineering,Linux,2025-08-27 11:30:00
+AST-0007,Workstation-3,Workstation,10.0.0.102,medium,user1,Finance,Windows,2025-08-29 09:15:00
+AST-0008,Router-1,Router,172.16.0.100,high,service,IT,Unknown,2025-08-28 12:00:00
+AST-0009,Firewall-1,Firewall,192.168.1.1,critical,service,IT,Unknown,2025-08-28 08:00:00
+AST-0010,Database-1,Database,192.168.1.150,critical,admin,IT,Linux,2025-08-27 18:45:00
