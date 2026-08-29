@@ -1,32 +1,28 @@
-# 🛡️ CipherMind AI '26 — AI-Powered Security Operations Assistant
+<div align="center">
 
-An intelligent, multi-modal AI defender designed to empower enterprise Security Operations Center (SOC) teams[span_1](start_span)[span_1](end_span). CipherMind AI ingests noisy security telemetry, eliminates alert fatigue, pinpoints advanced cyber threats, and delivers automated, explainable mitigation playbooks in seconds[span_2](start_span)[span_2](end_span).
+# 🛡️ CipherMind AI '26
+### *Next-Generation Autonomous SOC Operations & Threat Intelligence Assistant*
 
----
+[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Framework](https://img.shields.io/badge/UI-Gradio-orange.svg)](https://gradio.app/)
+[![Dataset](https://img.shields.io/badge/Dataset-UNSW--NB15-red.svg)](https://research.unsw.edu.au/projects/unsw-nb15-dataset)
+[![Competition](https://img.shields.io/badge/Hackathon-Wooble%20CipherMind%20'26-purple.svg)](https://wooble.org)
 
-## 📌 Table of Contents
-- [Executive Overview](#-executive-overview)
-- [System Architecture](#-system-architecture)
-- [Key Features](#-key-features)
-- [Datasets & Models](#-datasets--models)
-- [Evaluation & Performance](#-evaluation--performance)
-- [Explainable AI (XAI)](#-explainable-ai-xai)
-- [Installation & Quickstart](#-installation--quickstart)
-- [Project Structure](#-project-structure)
-- [Roadmap](#-roadmap)
+**Transforming raw enterprise telemetry into explainable, automated, and actionable cyber defense decisions in seconds.**
+
+[Key Innovations](#-key-innovations) • [System Architecture](#-system-architecture) • [Live Dashboard](#-interactive-soc-dashboard) • [Explainable AI](#-explainable-ai-xai) • [Quickstart](#-quickstart-guide)
 
 ---
 
-## 🚀 Executive Overview
-Modern SOC teams are inundated with thousands of daily alerts from firewalls, endpoint protection, and intrusion detection systems[span_3](start_span)[span_3](end_span). Most alerts are benign or redundant, while critical attacks blend into the noise[span_4](start_span)[span_4](end_span). 
+</div>
 
-**CipherMind AI** bridges this gap by combining:
-1. **Network Intrusion Detection & Multi-Classification:** Trained on the **UNSW-NB15** dataset across 9 distinct threat vectors[span_5](start_span)[span_5](end_span).
-2. **Explainable AI (XAI):** Utilizing SHAP (SHapley Additive exPlanations) to demystify black-box predictions for security analysts[span_6](start_span)[span_6](end_span).
-3. **Phishing Email NLP Scorer:** Rapid lexical and urgency analysis to stop credential theft and initial compromise[span_7](start_span)[span_7](end_span).
-4. **Unsupervised Malware Clustering:** Dynamic behavioral grouping (PCA + K-Means) to classify unknown samples into malware families[span_8](start_span)[span_8](end_span).
-5. **Interactive SOC Dashboard:** A 3-tab Gradio platform delivering instant risk scoring and actionable response playbooks[span_9](start_span)[span_9](end_span).
+## 📌 Executive Summary
+
+Modern enterprise Security Operations Centers (SOCs) are overwhelmed by thousands of alerts daily from endpoint detection tools, network firewalls, and mail gateways[span_0](start_span)[span_0](end_span). Over 80% are false positives or redundant noise, causing critical dwell time for attackers to escalate privileges and exfiltrate sensitive data[span_1](start_span)[span_1](end_span).
+
+**CipherMind AI** is an AI-powered SOC Assistant that empowers tier-1/tier-2 analysts by filtering background noise, predicting advanced multi-class network threats, scoring phishing lures, discovering malware behavioral families, and automatically formulating incident response playbooks[span_2](start_span)[span_2](end_span).
 
 ---
 
-## 🏗️ System Architecture
+## ⚡ Key Innovations & Capabilities
