@@ -80,10 +80,10 @@ else:
 
 # Force column to hold text strings so Pandas doesn't crash
 if 'incident_id' in alerts_copy.columns:
-    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+        alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
 else:
-    alerts_copy['incident_id'] = None
-    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+        alerts_copy['incident_id'] = None
+        alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
                 if len(matching_idx) > 0:
                     alerts_copy.loc[matching_idx[0], 'incident_id'] = incident_id
         # Calculate correlation metrics
