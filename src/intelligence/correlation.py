@@ -34,7 +34,7 @@ class AlertCorrelationEngine:
         
         # Make a copy to avoid modifying original
         alerts_copy = alerts.copy()
-        if 'incident_id' in alerts_copy.columns:
+if 'incident_id' in alerts_copy.columns:
     alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
 else:
     alerts_copy['incident_id'] = None
