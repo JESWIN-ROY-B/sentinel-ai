@@ -34,7 +34,11 @@ class AlertCorrelationEngine:
         
         # Make a copy to avoid modifying original
         alerts_copy = alerts.copy()
-        
+        if 'incident_id' in alerts_copy.columns:
+    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+else:
+    alerts_copy['incident_id'] = None
+    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
         # Ensure timestamp is datetime
         if 'timestamp' in alerts_copy.columns:
             alerts_copy['timestamp'] = pd.to_datetime(alerts_copy['timestamp'])
@@ -72,15 +76,19 @@ class AlertCorrelationEngine:
             incident_id = incident['incident_id']
             for alert in incident['alerts']:
                 # Find matching alert in original dataframe and assign incident ID
-                matching_idx = alerts_copy[
-                    (alerts_copy['timestamp'] == alert['timestamp']) &
-                    (alerts_copy['source_ip'] == alert.get('source_ip', '')) &
-                    (alerts_copy['destination_ip'] == alert.get('destination_ip', ''))
+                alerts_copy = alerts.copy()
+
+# Force column to hold text strings so Pandas doesn't crash
+if 'incident_id' in alerts_copy.columns:
+    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+else:
+    alerts_copy['incident_id'] = None
+    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+
                 ].index
-                
+
                 if len(matching_idx) > 0:
                     alerts_copy.loc[matching_idx[0], 'incident_id'] = incident_id
-        
         # Calculate correlation metrics
         correlation_metrics = {
             'total_alerts': len(alerts),
