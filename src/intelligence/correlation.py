@@ -34,11 +34,14 @@ class AlertCorrelationEngine:
         
         # Make a copy to avoid modifying original
         alerts_copy = alerts.copy()
-if 'incident_id' in alerts_copy.columns:
-    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
-else:
-    alerts_copy['incident_id'] = None
-    alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+
+        # Ensure incident_id column is cast to object dtype so string IDs don't trigger LossySetitemError
+        if 'incident_id' in alerts_copy.columns:
+            alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+        else:
+            alerts_copy['incident_id'] = None
+            alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
+
         # Ensure timestamp is datetime
         if 'timestamp' in alerts_copy.columns:
             alerts_copy['timestamp'] = pd.to_datetime(alerts_copy['timestamp'])
@@ -68,24 +71,17 @@ else:
                 incidents.append(new_incident)
                 incident_counter += 1
         
-        # Convert incidents to dataframe
-        incidents_df = pd.DataFrame([self._flatten_incident(inc) for inc in incidents])
-        
-        # Update alerts with incident IDs
+        # Update alerts with incident IDs cleanly
         for incident in incidents:
             incident_id = incident['incident_id']
             for alert in incident['alerts']:
-                # Find matching alert in original dataframe and assign incident ID
-                alerts_copy = alerts.copy()
+                # Match alert by timestamp and source_ip to set incident_id
+                mask = (alerts_copy['timestamp'] == alert['timestamp'])
+                if 'source_ip' in alert and 'source_ip' in alerts_copy.columns:
+                    mask &= (alerts_copy['source_ip'] == alert['source_ip'])
+                
+                alerts_copy.loc[mask, 'incident_id'] = incident_id
 
-# Force column to hold text strings so Pandas doesn't crash
-if 'incident_id' in alerts_copy.columns:
-        alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
-else:
-        alerts_copy['incident_id'] = None
-        alerts_copy['incident_id'] = alerts_copy['incident_id'].astype('object')
-                if len(matching_idx) > 0:
-                    alerts_copy.loc[matching_idx[0], 'incident_id'] = incident_id
         # Calculate correlation metrics
         correlation_metrics = {
             'total_alerts': len(alerts),
@@ -235,10 +231,10 @@ def correlate_alerts_to_incidents(alerts: pd.DataFrame) -> Tuple[pd.DataFrame, p
                     'first_seen': incident_alerts['timestamp'].min(),
                     'last_seen': incident_alerts['timestamp'].max(),
                     'alert_count': len(incident_alerts),
-                    'source_ips': incident_alerts['source_ip'].unique().tolist(),
-                    'affected_assets': incident_alerts['destination_ip'].unique().tolist(),
-                    'attack_category': incident_alerts['attack_category'].mode()[0] if len(incident_alerts) > 0 else 'Unknown',
-                    'severity': incident_alerts['severity'].mode()[0] if len(incident_alerts) > 0 else 'Medium'
+                    'source_ips': incident_alerts['source_ip'].unique().tolist() if 'source_ip' in incident_alerts.columns else [],
+                    'affected_assets': incident_alerts['destination_ip'].unique().tolist() if 'destination_ip' in incident_alerts.columns else [],
+                    'attack_category': incident_alerts['attack_category'].mode()[0] if ('attack_category' in incident_alerts.columns and len(incident_alerts) > 0) else 'Unknown',
+                    'severity': incident_alerts['severity'].mode()[0] if ('severity' in incident_alerts.columns and len(incident_alerts) > 0) else 'Medium'
                 }
                 incidents.append(incident)
     
@@ -248,10 +244,6 @@ def correlate_alerts_to_incidents(alerts: pd.DataFrame) -> Tuple[pd.DataFrame, p
 
 
 if __name__ == "__main__":
-    # Test correlation
-    from datetime import datetime, timedelta
-    
-    # Create test alerts
     base_time = datetime.now()
     test_alerts = pd.DataFrame([
         {
