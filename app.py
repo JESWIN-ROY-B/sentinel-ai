@@ -1,6 +1,7 @@
 """Sentinel AI - Main Streamlit Application"""
 
 import sys
+import traceback
 from pathlib import Path
 import streamlit as st
 
@@ -16,11 +17,13 @@ st.set_page_config(
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-from src.utils.logger import setup_logger, get_logger
-from src.utils.config import config
-
-# Setup logging AFTER st.set_page_config
-logger = get_logger(__name__)
+# Safe imports for logging and configuration
+try:
+    from src.utils.logger import setup_logger, get_logger
+    from src.utils.config import config
+    logger = get_logger(__name__)
+except Exception:
+    logger = None
 
 # Custom CSS for dark theme
 st.markdown("""
@@ -65,6 +68,46 @@ if 'incidents_df' not in st.session_state:
     st.session_state.incidents_df = None
 
 
+def load_synthetic_data():
+    """Load synthetic data into session state safely, auto-generating if missing."""
+    try:
+        from src.data.loader import DatasetLoader
+        from src.intelligence.risk_scoring import RiskScoringEngine
+        from src.intelligence.correlation import correlate_alerts_to_incidents
+        
+        loader = DatasetLoader()
+        
+        # Try loading existing synthetic data; if missing, generate it dynamically
+        try:
+            alerts_df = loader.load_synthetic_data()
+        except Exception as load_err:
+            if logger:
+                logger.warning(f"Synthetic data missing, generating new dataset: {load_err}")
+            from src.data.synthetic import generate_all_synthetic_data
+            generate_all_synthetic_data()
+            alerts_df = loader.load_synthetic_data()
+
+        risk_engine = RiskScoringEngine()
+        alerts_df = risk_engine.calculate_batch_risk(alerts_df)
+        
+        alerts_df, incidents_df, _ = correlate_alerts_to_incidents(alerts_df)
+        
+        st.session_state.alerts_df = alerts_df
+        st.session_state.incidents_df = incidents_df
+        st.session_state.data_loaded = True
+        st.session_state.synthetic_mode = True
+        
+        if logger:
+            logger.info("Synthetic data loaded successfully")
+        
+    except Exception as e:
+        if logger:
+            logger.error(f"Failed to load synthetic data: {e}")
+        st.error(f"Failed to load synthetic data: {e}")
+        # Print full stack trace on cloud screen to pinpoint missing modules or paths
+        st.code(traceback.format_exc(), language="python")
+
+
 def main():
     """Main application function."""
     
@@ -104,7 +147,8 @@ def main():
         
         # App info
         st.subheader("System Status")
-        st.caption(f"Version: {config.get('app.version', '1.0.0') if hasattr(config, 'get') else '1.0.0'}")
+        version = config.get('app.version', '1.0.0') if ('config' in globals() and hasattr(config, 'get')) else '1.0.0'
+        st.caption(f"Version: {version}")
         st.caption(f"Dataset: {'Synthetic' if st.session_state.synthetic_mode else 'Uploaded'}")
         
         # Model status
@@ -387,7 +431,7 @@ def render_explainability():
     st.markdown("---")
     st.info("Select an alert or incident to view model explanations")
     
-    if st.session_state.alerts_df is not None and len(st.session_state.alerts_df) == 0:
+    if st.session_state.alerts_df is not None and len(st.session_state.alerts_df) > 0:
         alert_index = st.selectbox("Select Alert Index", range(len(st.session_state.alerts_df)))
         
         if alert_index is not None:
@@ -505,33 +549,6 @@ def render_settings():
     
     if st.button("Save Settings"):
         st.success("Settings saved successfully")
-
-
-def load_synthetic_data():
-    """Load synthetic data into session state safely."""
-    try:
-        from src.data.loader import DatasetLoader
-        from src.intelligence.risk_scoring import RiskScoringEngine
-        from src.intelligence.correlation import correlate_alerts_to_incidents
-        
-        loader = DatasetLoader()
-        alerts_df = loader.load_synthetic_data()
-        
-        risk_engine = RiskScoringEngine()
-        alerts_df = risk_engine.calculate_batch_risk(alerts_df)
-        
-        alerts_df, incidents_df, _ = correlate_alerts_to_incidents(alerts_df)
-        
-        st.session_state.alerts_df = alerts_df
-        st.session_state.incidents_df = incidents_df
-        st.session_state.data_loaded = True
-        st.session_state.synthetic_mode = True
-        
-        logger.info("Synthetic data loaded successfully")
-        
-    except Exception as e:
-        logger.error(f"Failed to load synthetic data: {e}")
-        st.error(f"Failed to load synthetic data: {e}")
 
 
 if __name__ == "__main__":
